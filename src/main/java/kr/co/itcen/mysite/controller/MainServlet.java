@@ -15,13 +15,23 @@ public class MainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-
+		//request.setCharacterEncoding("utf-8");
+		
+		request.getServletContext().getInitParameter("contextConfigLocation");
+		
+		
 		String actionName = request.getParameter("a");
 		ActionFactory actionFactory = new MainActionFactory();
 		Action action = actionFactory.getAction(actionName);
 
 		action.execute(request, response);
+	}
+
+	@Override
+	public void init() throws ServletException {
+		String configPath = getServletConfig().getInitParameter("config");
+		System.out.println(configPath);
+		super.init();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

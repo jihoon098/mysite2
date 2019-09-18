@@ -1,16 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="kr.co.itcen.mysite.dao.GuestbookDao"%>
-<%@page import="java.util.List"%>
-<%@page import="kr.co.itcen.mysite.vo.GuestbookVo"%>
-<%
-	List<GuestbookVo> list = (List)request.getAttribute("list");
-%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>mysite2</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="<%=request.getContextPath()%>/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.servletContext.contextPath }/assets/css/guestbook.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
@@ -18,7 +16,7 @@
 		<div id="content">
 			<div id="guestbook">
 			
-				<form action="<%=request.getContextPath()%>/guestbook" method="post">
+				<form action="${pageContext.servletContext.contextPath }/guestbook" method="post">
 					<input type='hidden' name='a' value='add'>
 					<table border=1 width=500>
 						<tr>
@@ -36,29 +34,26 @@
 					</table>
 				</form>
 
-				<%
-					int count = list.size();
-					int index = 0;
-					for (GuestbookVo vo : list) {
-				%>
-				<br>
-				<table width=510 border=1>
-					<tr>
-						<td>[<%=count - index++%>]
-						</td>
-						<td><%=vo.getName()%></td>
-						<td><%=vo.getRegDate()%></td>
-						<td><a
-							href="<%=request.getContextPath()%>/guestbook?a=deleteform&no=<%=vo.getNo()%>">삭제</a></td>
-					</tr>
-					<tr>
-						<td colspan=4><%=vo.getContents().replaceAll("\n", "<br>")%>
-						</td>
-					</tr>
-				</table>
-				<%
-					}
-				%>
+				
+				<c:set var="count" value= '${fn:length(list) }' />
+				<ul>
+					<c:forEach items='${list }' var='guestbookVo' varStatus='status'>
+						<br>
+						<table width=510 border=1>
+							<tr>
+								<td>[${count - status.index}]</td>
+								<td>${guestbookVo.name}</td>
+								<td>${guestbookVo.regDate}</td>
+								<td><a href="${pageContext.servletContext.contextPath }/guestbook?a=deleteform&no=${guestbookVo.no}">삭제</a></td>
+							</tr>
+							<tr> 
+								<td colspan=4>${fn:replace(guestbookVo.contents, newline, '<br>') }
+								</td>
+							</tr>
+						</table>
+					</c:forEach>
+				</ul>
+
 			</div>
 		</div>
 

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import kr.co.itcen.mysite.dao.UserDao;
 import kr.co.itcen.mysite.vo.UserVo;
 import kr.co.itcen.web.WebUtils;
 import kr.co.itcen.web.mvc.Action;
@@ -28,7 +29,8 @@ public class UpdateFormAction implements Action {
 		}
 		/////////////////////////////////////////
 		// 인증처리(Session 처리)
-		session.setAttribute("authUser", authUser);
+		String email = new UserDao().getEmail(authUser.getNo());
+		request.setAttribute("email", email);
 		WebUtils.forward(request, response, "/WEB-INF/views/user/updateform.jsp");
 	}
 

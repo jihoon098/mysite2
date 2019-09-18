@@ -22,7 +22,7 @@ public class GuestbookDeleteAction implements Action {
 		vo.setPassword(password);
 
 		new GuestbookDao().delete(vo);
-
+		
 		response.sendRedirect(request.getContextPath() + "/guestbook");
 
 	}
