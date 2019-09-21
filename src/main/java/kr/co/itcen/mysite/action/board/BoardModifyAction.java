@@ -12,24 +12,24 @@ import kr.co.itcen.mysite.vo.UserVo;
 import kr.co.itcen.web.WebUtils;
 import kr.co.itcen.web.mvc.Action;
 
-public class BoardWriteAction implements Action {
+public class BoardModifyAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-
+		Long no = Long.parseLong(request.getParameter("no"));
+		String title = request.getParameter("title");
+		String contents = request.getParameter("contents");
+		
 		HttpSession session = request.getSession();
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		Long user_no = authUser.getNo();
 
-				
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		Long no = authUser.getNo();
-		
-		//게시글 insert 및 update실행돼야함
-		new BoardDao().insertBoard(title, content, no);
+		System.out.println(no + title + contents + user_no);
+		new BoardDao().modifyContents(no, title, contents, user_no);
 		
 		WebUtils.redirect(request, response, request.getContextPath() + "/board");
+
 	}
 
 }

@@ -33,7 +33,14 @@
 				</table>
 				<div class="bottom">
 					<a href="${pageContext.servletContext.contextPath }/board">글목록</a>
-					<a href="${pageContext.servletContext.contextPath }/board?a=modify">글수정</a>
+					<%-- <a href="${pageContext.servletContext.contextPath }/board">${authUser.no} , ${vo.user_no }</a> --%>
+
+					<!-- authUser.no와 board.user_no가 같으면!!! 보여줘야함. -->
+					<c:if test='${!empty authUser && authUser.no == vo.user_no }'>
+						<a href="${pageContext.servletContext.contextPath }/board?a=modifyform&no=${vo.no }">글수정</a>
+						<a href="${pageContext.servletContext.contextPath}/board?a=delete&no=${vo.no}">글삭제</a>
+					</c:if>
+
 				</div>
 			</div>
 		</div>

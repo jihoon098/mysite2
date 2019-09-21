@@ -14,10 +14,12 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
+			
 				<form id="search_form" action="" method="post">
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
+				
 				<table class="tbl-ex">
 					<tr>
 						<th>번호</th>
@@ -27,8 +29,6 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
-
-
 					<!-- 게시판에 있는 글 보여주기-->
 					<c:set var = "count" value = '${fn:length(list) }'/>
 					<c:forEach items = '${list }' var = 'boardVo' varStatus='status'  >
@@ -44,8 +44,15 @@
 									<td><a href="" class=""></a></td>
 								</c:when>
 								<c:otherwise>
-									<!-- authUser.no와 board.no가 같으면!!! 보여줘야함. -->
-									<td><a href="${pageContext.servletContext.contextPath}/board?a=delete&no=${boardVo.no}" class="del">삭제</a></td>
+									<!-- authUser.no와 board.user_no가 같으면!!! 보여줘야함. -->
+									<c:choose>
+										<c:when test='${authUser.no == boardVo.user_no }'>
+											<td><a href="${pageContext.servletContext.contextPath}/board?a=delete&no=${boardVo.no}" class="del">삭제</a></td>
+										</c:when>
+										<c:otherwise>
+											<td><a href="" class=""></a></td>
+										</c:otherwise>
+									</c:choose>
 								</c:otherwise>
 							</c:choose>
 
@@ -70,8 +77,11 @@
 				<!-- pager 추가 -->
 				
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
-				</div>				
+					<c:if test='${!empty authUser}'>
+						<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+					</c:if>
+				</div>
+			
 			</div>
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp">
