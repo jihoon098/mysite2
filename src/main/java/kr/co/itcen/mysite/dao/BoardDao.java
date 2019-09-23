@@ -12,7 +12,7 @@ import kr.co.itcen.mysite.vo.BoardVo;
 
 public class BoardDao {
 	
-	public List<BoardVo> getList() {
+	public List<BoardVo> getList(String kwd) {
 		List<BoardVo> result = new ArrayList<BoardVo>();
 		
 		Connection connection = null;
@@ -26,8 +26,16 @@ public class BoardDao {
 				"   select a.no, a.title, b.name, a.hit, date_format(a.reg_date, '%Y-%m-%d %h:%i:%s'), a.user_no" +
 				"     from board a, user b" +
 				" where a.user_no = b.no" +
+				" and (title like concat('%',?,'%')"+ 
+				" or contents like concat('%',?,'%'))" +
 				" order by reg_date desc";
 			pstmt = connection.prepareStatement(sql);
+			
+			if(kwd == null) {
+				kwd = "";
+			}
+			pstmt.setString(1, kwd);
+			pstmt.setString(2, kwd);				
 			
 			rs = pstmt.executeQuery();
 			
@@ -79,8 +87,7 @@ public class BoardDao {
 		try {
 			connection = getConnection();
 
-			String sql = 
-					"insert into board values(null, ?, ?, 0, now(), 0, 0, 0, ?, 0)";
+			String sql = "insert into board values(null, ?, ?, 0, now(), 0, 0, 0, ?, 0)";
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, title);
 			pstmt.setString(2, content);

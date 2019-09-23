@@ -15,7 +15,7 @@
 		<div id="content">
 			<div id="board">
 			
-				<form id="search_form" action="" method="post">
+				<form id="search_form" action="${pageContext.servletContext.contextPath}/board" method="post">
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -29,11 +29,18 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
+					
+					
 					<!-- 게시판에 있는 글 보여주기-->
 					<c:set var = "count" value = '${fn:length(list) }'/>
 					<c:forEach items = '${list }' var = 'boardVo' varStatus='status'  >
 						<tr>
 							<td>${count - status.index }</td>
+							
+							<%-- <td style='padding-left:${40*vo.depth}px'>
+								<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png" style='padding-left:${40*vo.depth}px'/>
+								<a href="${pageContext.servletContext.contextPath}/board?a=view&no=${boardVo.no}">${boardVo.title }</a>
+							</td> --%>
 							<td><a href="${pageContext.servletContext.contextPath}/board?a=view&no=${boardVo.no}">${boardVo.title }</a></td>
 							<td>${boardVo.user_name }</td>
 							<td>${boardVo.hit }</td>

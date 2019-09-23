@@ -17,8 +17,9 @@ public class BoardListAction implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		String kwd = request.getParameter("kwd");
 		
-		List<BoardVo> list = new BoardDao().getList();
+		List<BoardVo> list = new BoardDao().getList(kwd);
 		request.setAttribute("list", list);
 		
 		WebUtils.forward(request, response, "/WEB-INF/views/board/list.jsp");
