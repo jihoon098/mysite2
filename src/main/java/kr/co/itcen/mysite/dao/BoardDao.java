@@ -28,7 +28,7 @@ public class BoardDao {
 				" where a.user_no = b.no" +
 				" and (title like concat('%',?,'%')"+ 
 				" or contents like concat('%',?,'%'))" +
-				" order by reg_date desc";
+				" order by reg_date desc, g_no desc, o_no asc, depth asc";
 			pstmt = connection.prepareStatement(sql);
 			
 			if(kwd == null) {
@@ -80,18 +80,19 @@ public class BoardDao {
 	
 
 	
-	public void insertBoard(String title, String content, Long no) {
+	public void insertBoard(BoardVo vo) {
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 
 		try {
 			connection = getConnection();
 
-			String sql = "insert into board values(null, ?, ?, 0, now(), 0, 0, 0, ?, 0)";
+			String sql = "insert into board values(null, ?, ?, 0, now(), (select ifnull (max(g_no+1), 1) from board as a), 0, 0, ?, 0)";
+			
 			pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, title);
-			pstmt.setString(2, content);
-			pstmt.setLong(3, no);
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setString(2, vo.getContents());
+			pstmt.setLong(3, vo.getUser_no());
 
 			pstmt.executeUpdate();
 
@@ -126,7 +127,7 @@ public class BoardDao {
 			connection = getConnection();
 			
 			String sql = 
-				"   select no, title, contents, user_no" +
+				"   select no, title, contents, user_no, g_no, o_no, depth" +
 				"     from board" +
 				" where no = ?";
 			pstmt = connection.prepareStatement(sql);
@@ -139,13 +140,20 @@ public class BoardDao {
 				String title = rs.getString(2);
 				String contents = rs.getString(3);
 				Long user_no = rs.getLong(4);
-
+				Long g_no = rs.getLong(5);
+				Long o_no = rs.getLong(6);
+				Long depth = rs.getLong(7);
+				
 				vo = new BoardVo();
 				vo.setNo(no1);
 				vo.setTitle(title);
 				vo.setContents(contents);
 				vo.setUser_no(user_no);
+				vo.setG_no(g_no);
+				vo.setO_no(o_no);
+				vo.setDepth(depth);
 			}
+			
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
