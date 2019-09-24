@@ -31,7 +31,7 @@ public class BoardWriteAction implements Action {
 		
 		if(request.getParameter("g_no") == null) {
 			g_no = 0L;
-			o_no = 0L;
+			o_no = 1L;
 			depth = 0L;
 		}else {
 			g_no = Long.parseLong(request.getParameter("g_no"));

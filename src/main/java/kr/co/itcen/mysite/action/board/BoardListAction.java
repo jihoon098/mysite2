@@ -22,6 +22,7 @@ public class BoardListAction implements Action {
 		List<BoardVo> list = new BoardDao().getList(kwd);
 		request.setAttribute("list", list);
 		
+		//WebUtils.redirect(request, response, request.getContextPath() + "/board");
 		WebUtils.forward(request, response, "/WEB-INF/views/board/list.jsp");
 	}
 

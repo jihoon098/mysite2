@@ -36,12 +36,20 @@
 					<c:forEach items = '${list }' var = 'boardVo' varStatus='status'  >
 						<tr>
 							<td>${count - status.index }</td>
+
+
+							<c:choose>
+								<c:when test='${boardVo.o_no == 1}'>
+									<td style="text-align:left"><a href="${pageContext.servletContext.contextPath}/board?a=view&no=${boardVo.no}">${boardVo.title }</a></td>
+								</c:when>
+								<c:otherwise>
+									<td class="label" style="padding-left:${30*boardVo.depth-20}px;text-align:left">
+								<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png" style='padding-left:${40*boardVo.depth}px'/>
+								<a href="${pageContext.servletContext.contextPath}/board?a=view&no=${boardVo.no}">${boardVo.title }</a></td>
+								</c:otherwise>
+							</c:choose>
+
 							
-							<%-- <td style='padding-left:${40*vo.depth}px'>
-								<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png" style='padding-left:${40*vo.depth}px'/>
-								<a href="${pageContext.servletContext.contextPath}/board?a=view&no=${boardVo.no}">${boardVo.title }</a>
-							</td> --%>
-							<td><a href="${pageContext.servletContext.contextPath}/board?a=view&no=${boardVo.no}">${boardVo.title }</a></td>
 							<td>${boardVo.user_name }</td>
 							<td>${boardVo.hit }</td>
 							<td>${boardVo.reg_date }</td>

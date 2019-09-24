@@ -23,12 +23,12 @@ public class BoardDao {
 			connection = getConnection();
 			
 			String sql = 
-				"   select a.no, a.title, b.name, a.hit, date_format(a.reg_date, '%Y-%m-%d %h:%i:%s'), a.user_no" +
+				"   select a.no, a.title, b.name, a.hit, date_format(a.reg_date, '%Y-%m-%d %h:%i:%s'), a.user_no, a.o_no, a.depth" +
 				"     from board a, user b" +
 				" where a.user_no = b.no" +
 				" and (title like concat('%',?,'%')"+ 
 				" or contents like concat('%',?,'%'))" +
-				" order by reg_date desc, g_no desc, o_no asc, depth asc";
+				" order by g_no desc, o_no asc";
 			pstmt = connection.prepareStatement(sql);
 			
 			if(kwd == null) {
@@ -46,6 +46,9 @@ public class BoardDao {
 				Long hit = rs.getLong(4);
 				String regDate = rs.getString(5);
 				Long user_no = rs.getLong(6);
+				Long o_no = rs.getLong(7);
+				Long depth = rs.getLong(8);
+				
 				
 				BoardVo vo= new BoardVo();
 				vo.setNo(no);
@@ -54,6 +57,8 @@ public class BoardDao {
 				vo.setHit(hit);
 				vo.setReg_date(regDate);
 				vo.setUser_no(user_no);
+				vo.setO_no(o_no);
+				vo.setDepth(depth);
 				
 				result.add(vo);
 			}
@@ -83,16 +88,38 @@ public class BoardDao {
 	public void insertBoard(BoardVo vo) {
 		Connection connection = null;
 		PreparedStatement pstmt = null;
+		String sql = null;
 
 		try {
 			connection = getConnection();
-
-			String sql = "insert into board values(null, ?, ?, 0, now(), (select ifnull (max(g_no+1), 1) from board as a), 0, 0, ?, 0)";
+			long OnoVal = vo.getO_no()+1;
+			long depVal = vo.getDepth()+1;
+			
+			sql = "update board set o_no=o_no+1 where g_no = ? and o_no >= ? ";
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setLong(1, vo.getG_no());
+			pstmt.setLong(2, OnoVal);
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			if(vo.getG_no() == 0) {
+				sql = "insert into board values(null, ?, ?, 0, now(), (select ifnull (max(g_no+1), 1) from board as a), 1, 0, ?, 0)";
+			}else {
+				sql = "insert into board values(null, ?, ?, 0, now(), ?, ?, ?, ?, 0)";
+			}
 			
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContents());
-			pstmt.setLong(3, vo.getUser_no());
+			if(vo.getG_no() != 0) {
+				pstmt.setLong(3, vo.getG_no());
+				pstmt.setLong(4, OnoVal);
+				pstmt.setLong(5, depVal);				
+				pstmt.setLong(6, vo.getUser_no());
+			}else {
+				pstmt.setLong(3, vo.getUser_no());
+				
+			}
 
 			pstmt.executeUpdate();
 
