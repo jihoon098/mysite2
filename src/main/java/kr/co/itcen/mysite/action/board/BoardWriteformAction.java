@@ -19,7 +19,6 @@ public class BoardWriteformAction implements Action {
 		Long o_no;
 		Long depth;
 		
-
 		if(request.getParameter("g_no") == null) {
 			g_no = 0L;
 			o_no = 1L;
@@ -29,7 +28,6 @@ public class BoardWriteformAction implements Action {
 			o_no = Long.parseLong(request.getParameter("o_no"));
 			depth = Long.parseLong(request.getParameter("depth"));
 		}
-		
 		
 		BoardVo vo = new BoardVo();
 		vo.setG_no(g_no);

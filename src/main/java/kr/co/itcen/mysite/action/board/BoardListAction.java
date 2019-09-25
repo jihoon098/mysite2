@@ -18,9 +18,14 @@ public class BoardListAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String kwd = request.getParameter("kwd");
-		
 		List<BoardVo> list = new BoardDao().getList(kwd);
 		request.setAttribute("list", list);
+		
+		int page = 1;
+		if(request.getParameter("page") != null) {
+			page = Integer.parseInt(request.getParameter("page"));	
+		}
+		request.setAttribute("page", page);
 		
 		//WebUtils.redirect(request, response, request.getContextPath() + "/board");
 		WebUtils.forward(request, response, "/WEB-INF/views/board/list.jsp");

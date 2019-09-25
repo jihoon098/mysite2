@@ -25,19 +25,10 @@ public class BoardWriteAction implements Action {
 
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
-		Long g_no;
-		Long o_no;
-		Long depth;
+		Long g_no = Long.parseLong(request.getParameter("g_no"));
+		Long o_no = Long.parseLong(request.getParameter("o_no"));
+		Long depth = Long.parseLong(request.getParameter("depth"));
 		
-		if(request.getParameter("g_no") == null) {
-			g_no = 0L;
-			o_no = 1L;
-			depth = 0L;
-		}else {
-			g_no = Long.parseLong(request.getParameter("g_no"));
-			o_no = Long.parseLong(request.getParameter("o_no"));
-			depth = Long.parseLong(request.getParameter("depth"));
-		}
 		
 		BoardVo vo = new BoardVo();
 		vo.setTitle(title);

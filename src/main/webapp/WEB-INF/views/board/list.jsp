@@ -31,12 +31,19 @@
 					</tr>
 					
 					
-					<!-- 게시판에 있는 글 보여주기-->
-					<c:set var = "count" value = '${fn:length(list) }'/>
-					<c:forEach items = '${list }' var = 'boardVo' varStatus='status'  >
+					<!-- 게시판에 있는 글 보여주기-->				
+					<c:choose>
+						<c:when test='${fn:length(list) <= page*10}'>
+							<c:set var = "count" value = '${fn:length(list) }'/>
+						</c:when>
+						<c:otherwise>
+							<c:set var = "count" value = '${page*10 }'/>
+						</c:otherwise>
+					</c:choose>
+
+					<c:forEach items = '${list }' var = 'boardVo' begin='${page*10-10 }' end='${count-1 }' step='1' varStatus='status'>
 						<tr>
 							<td>${count - status.index }</td>
-
 
 							<c:choose>
 								<c:when test='${boardVo.o_no == 1}'>
@@ -77,16 +84,21 @@
 					
 				</table>
 				
+				
 				<!-- pager 추가 -->
+				<!-- <c:set var = "pageCount" value = '${fn:length(list)/10 + 1 }'/> -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="">3</a></li>
-						<li>4</li>
-						<li>5</li>
-						<li><a href="">▶</a></li>
+						<li><a href="${pageContext.servletContext.contextPath}/board?page=${page-1 }">◀</a></li>
+						
+						<c:forEach begin = '1' end = '${fn:length(list)/10+1 }' varStatus='status'>					
+							<li><a href="${pageContext.servletContext.contextPath}/board?page=${status.count }">${status.count }</a></li>
+						</c:forEach>
+					
+						<li><a href="${pageContext.servletContext.contextPath}/board?page=${page+1 }">▶</a></li>
+				
+						<!-- <li class="selected"><a href="">2</a></li> -->
+						
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
