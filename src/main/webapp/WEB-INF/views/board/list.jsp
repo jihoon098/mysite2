@@ -85,19 +85,27 @@
 				</table>
 				
 				
-				<!-- pager 추가 -->
+				<!-- pageing -->
 				<!-- <c:set var = "pageCount" value = '${fn:length(list)/10 + 1 }'/> -->
 				<div class="pager">
 					<ul>
+
+						<c:choose>
+							<c:when test="${(page%5) eq 1 }">
+								<c:set var = "pageCount" value = '${page }'/>
+							</c:when>
+							<c:otherwise>
+								<c:set var = "pageCount" value = '${page-(page%5-1) }'/>
+							</c:otherwise>
+						</c:choose>
+						
 						<li><a href="${pageContext.servletContext.contextPath}/board?page=${page-1 }">◀</a></li>
 						
-						<c:forEach begin = '1' end = '${fn:length(list)/10+1 }' varStatus='status'>					
-							<li><a href="${pageContext.servletContext.contextPath}/board?page=${status.count }">${status.count }</a></li>
+						<c:forEach var = "page" begin = '${pageCount }' end = '${fn:length(list)/10+1 }' varStatus='status'>			
+							<li><a href="${pageContext.servletContext.contextPath}/board?page=${page }">${page }</a></li>
 						</c:forEach>
-					
+
 						<li><a href="${pageContext.servletContext.contextPath}/board?page=${page+1 }">▶</a></li>
-				
-						<!-- <li class="selected"><a href="">2</a></li> -->
 						
 					</ul>
 				</div>					

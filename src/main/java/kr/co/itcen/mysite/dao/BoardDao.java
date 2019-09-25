@@ -145,15 +145,20 @@ public class BoardDao {
 	
 	public BoardVo getBoard(long no) {
 		BoardVo vo = null;
-		
+		String sql = null;
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
 		try {
 			connection = getConnection();
+			sql = "update board set hit=hit+1 where no = ? ";
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setLong(1, no);
+			pstmt.executeUpdate();
+			pstmt.close();
 			
-			String sql = 
+			sql = 
 				"   select no, title, contents, user_no, g_no, o_no, depth" +
 				"     from board" +
 				" where no = ?";
